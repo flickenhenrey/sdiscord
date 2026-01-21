@@ -5,6 +5,7 @@ import {
     serverTimestamp, doc, setDoc, getDoc, where, updateDoc, arrayUnion 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getDatabase, ref, onValue, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPggbx3_-BR-Lf8aBkihufcXFF9stijAc",
@@ -20,6 +21,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 const rtdb = getDatabase();
+const storage = getStorage();
 const provider = new GoogleAuthProvider();
 
 let activeChatId = null;
@@ -27,6 +29,7 @@ let isGroupChat = false;
 let messageUnsubscribe = null;
 let membersUnsubscribe = null;
 let onlineStatuses = {};
+let selectedAvatarFile = null;
 
 // Auth State
 onAuthStateChanged(auth, user => {
@@ -34,6 +37,10 @@ onAuthStateChanged(auth, user => {
         document.getElementById('auth-container').style.display = 'none';
         document.getElementById('app-container').style.display = 'flex';
         document.getElementById('user-display-name').innerText = user.email.split('@')[0];
+        
+        // Load user profile
+        loadUserProfile(user.email);
+        
         setDoc(doc(db, "users", user.email), { email: user.email, uid: user.uid }, { merge: true });
         
         // Set up presence system
@@ -51,6 +58,93 @@ onAuthStateChanged(auth, user => {
 
 document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
 document.getElementById('logout-btn').onclick = () => signOut(auth);
+
+// --- PROFILE SYSTEM ---
+
+async function loadUserProfile(email) {
+    const userDoc = await getDoc(doc(db, "users", email));
+    if (userDoc.exists() && userDoc.data().avatarUrl) {
+        document.getElementById('user-avatar').src = userDoc.data().avatarUrl;
+        document.getElementById('preview-avatar').src = userDoc.data().avatarUrl;
+    }
+}
+
+document.getElementById('user-info-btn').onclick = () => {
+    document.getElementById('profile-modal').style.display = 'flex';
+};
+
+document.getElementById('close-modal-btn').onclick = () => {
+    document.getElementById('profile-modal').style.display = 'none';
+};
+
+document.getElementById('upload-btn').onclick = () => {
+    document.getElementById('avatar-upload').click();
+};
+
+document.getElementById('avatar-upload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Check file size (20MB = 20 * 1024 * 1024 bytes)
+    if (file.size > 20 * 1024 * 1024) {
+        alert('File size must be under 20MB!');
+        return;
+    }
+    
+    // Check if it's an image
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file!');
+        return;
+    }
+    
+    selectedAvatarFile = file;
+    
+    // Preview the image
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        document.getElementById('preview-avatar').src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+};
+
+document.getElementById('save-profile-btn').onclick = async () => {
+    if (!selectedAvatarFile) {
+        alert('Please select an image first!');
+        return;
+    }
+    
+    try {
+        const userEmail = auth.currentUser.email;
+        const fileRef = storageRef(storage, `avatars/${userEmail}_${Date.now()}`);
+        
+        // Upload the file
+        await uploadBytes(fileRef, selectedAvatarFile);
+        
+        // Get the download URL
+        const downloadURL = await getDownloadURL(fileRef);
+        
+        // Save to Firestore
+        await updateDoc(doc(db, "users", userEmail), {
+            avatarUrl: downloadURL
+        });
+        
+        // Update UI
+        document.getElementById('user-avatar').src = downloadURL;
+        document.getElementById('profile-modal').style.display = 'none';
+        
+        alert('Profile updated successfully!');
+    } catch (error) {
+        console.error('Error uploading avatar:', error);
+        alert('Failed to upload avatar. Please try again.');
+    }
+};
+
+// Close modal when clicking outside
+document.getElementById('profile-modal').onclick = (e) => {
+    if (e.target.id === 'profile-modal') {
+        document.getElementById('profile-modal').style.display = 'none';
+    }
+};
 
 // --- FRIENDS SYSTEM ---
 
