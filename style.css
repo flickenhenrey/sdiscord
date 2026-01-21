@@ -168,9 +168,152 @@ body, html {
 }
 
 /* Footer */
-.user-footer { margin-top: auto; padding: 10px; border-top: 1px solid #3f4147; display: flex; justify-content: space-between; font-size: 12px; }
-#logout-btn { background: transparent; color: #ed4245; border: none; cursor: pointer; }
+.user-footer { 
+    margin-top: auto; 
+    padding: 10px; 
+    border-top: 1px solid #3f4147; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 12px; 
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.user-info:hover {
+    background: #35373c;
+}
+
+#user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#logout-btn { 
+    background: transparent; 
+    color: #ed4245; 
+    border: none; 
+    cursor: pointer; 
+}
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-thumb { background: #1e1f22; border-radius: 4px; }
+
+/* Profile Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #313338;
+    border-radius: 8px;
+    width: 440px;
+    max-width: 90%;
+}
+
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #3f4147;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #f2f3f5;
+}
+
+.close-modal {
+    background: transparent;
+    border: none;
+    color: #b5bac1;
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+}
+
+.close-modal:hover {
+    color: #fff;
+}
+
+.modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-preview {
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #5865f2;
+}
+
+#preview-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.upload-btn {
+    background: #5865f2;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    background: #4752c4;
+}
+
+.file-info {
+    font-size: 12px;
+    color: #949ba4;
+    margin: 0;
+}
+
+.save-btn {
+    background: #248046;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.save-btn:hover {
+    background: #1a6334;
+}
