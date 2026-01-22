@@ -85,12 +85,6 @@ document.getElementById('avatar-upload').onchange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
     
-    // Check file size (20MB = 20 * 1024 * 1024 bytes)
-    if (file.size > 20 * 1024 * 1024) {
-        alert('File size must be under 20MB!');
-        return;
-    }
-    
     // Check if it's an image
     if (!file.type.startsWith('image/')) {
         alert('Please select an image file!');
