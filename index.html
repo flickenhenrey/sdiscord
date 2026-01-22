@@ -10,76 +10,59 @@
     <div id="auth-container">
         <div class="login-card">
             <h1>SchoolDiscord</h1>
-            <p>Welcome to schooldiscord67</p>
+            <p>Connect with your classmates</p>
             <button id="login-btn">Sign in with Google</button>
         </div>
     </div>
 
     <div id="app-container" style="display: none;">
         <nav class="sidebar">
-            <div class="sidebar-header"><h3>Friends</h3></div>
+            <div class="sidebar-header">
+                <h3>Friends</h3>
+            </div>
             <div class="search-area">
-                <input type="text" id="friend-search" placeholder="Friend's Gmail...">
-                <button id="add-friend-btn">Add</button>
+                <input type="text" id="friend-search" placeholder="Add friend by email...">
+                <button id="add-friend-btn">+</button>
             </div>
             <div id="friends-list"></div>
 
             <hr class="sidebar-divider">
 
-            <div class="sidebar-header"><h3>Groups</h3></div>
+            <div class="sidebar-header">
+                <h3>Groups</h3>
+            </div>
             <div class="search-area">
-                <input type="text" id="group-name-input" placeholder="Group Name...">
-                <button id="create-group-btn">Create</button>
+                <input type="text" id="group-name-input" placeholder="New group name...">
+                <button id="create-group-btn">+</button>
             </div>
             <div id="groups-list"></div>
 
             <div class="user-footer">
-                <div class="user-info" id="user-info-btn">
-                    <img id="user-avatar" src="https://via.placeholder.com/32/5865f2/ffffff?text=?" alt="avatar">
-                    <span id="user-display-name"></span>
-                </div>
+                <span id="user-display-name"></span>
                 <button id="logout-btn">Logout</button>
             </div>
         </nav>
 
         <main class="chat-area">
             <header class="chat-header">
-                <span id="chat-with-title">Select a friend or group</span>
-                <div id="group-manage-area" style="display: none;">
-                    <input type="text" id="add-member-email" placeholder="User Gmail...">
-                    <button id="add-member-btn">Add Member</button>
+                <span id="chat-title">Select a chat</span>
+                <div id="add-member-section" style="display: none;">
+                    <input type="text" id="member-email-input" placeholder="Add member...">
+                    <button id="add-member-btn">+</button>
                 </div>
             </header>
-            <div id="messages-container"></div>
-            <div class="input-area">
-                <input type="text" id="message-input" placeholder="Message..." disabled>
+            <div id="messages-area"></div>
+            <div class="message-input-area">
+                <input type="text" id="message-input" placeholder="Type a message..." disabled>
             </div>
         </main>
 
-        <aside class="members-panel" id="members-panel" style="display: none;">
+        <aside id="members-sidebar" style="display: none;">
             <div class="members-header">
                 <h3>Members</h3>
             </div>
             <div id="members-list"></div>
         </aside>
-    </div>
-
-    <!-- Profile Modal -->
-    <div id="profile-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Edit Profile</h2>
-                <button class="close-modal" id="close-modal-btn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="profile-preview">
-                    <img id="preview-avatar" src="https://via.placeholder.com/128/5865f2/ffffff?text=?" alt="avatar">
-                </div>
-                <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-                <button id="upload-btn" class="upload-btn">Choose Image</button>
-                <button id="save-profile-btn" class="save-btn">Save Profile</button>
-            </div>
-        </div>
     </div>
 
     <script type="module" src="app.js"></script>
