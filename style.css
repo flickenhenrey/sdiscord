@@ -12,7 +12,6 @@ body {
     overflow: hidden;
 }
 
-/* Auth Screen */
 #auth-container {
     display: flex;
     justify-content: center;
@@ -55,13 +54,11 @@ body {
     background: #4752c4;
 }
 
-/* Main App Layout */
 #app-container {
     display: flex;
     height: 100vh;
 }
 
-/* Sidebar */
 .sidebar {
     width: 240px;
     background: #2b2d31;
@@ -173,7 +170,6 @@ body {
     text-decoration: underline;
 }
 
-/* Chat Area */
 .chat-area {
     flex: 1;
     display: flex;
@@ -329,7 +325,6 @@ body {
     opacity: 0.9;
 }
 
-/* Members Sidebar */
 #members-sidebar {
     width: 240px;
     background: #2b2d31;
@@ -368,7 +363,6 @@ body {
     background: #35373c;
 }
 
-/* Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
