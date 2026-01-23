@@ -101,6 +101,7 @@ function openDirectMessage(email) {
     document.getElementById('add-member-section').style.display = 'none';
     document.getElementById('members-sidebar').style.display = 'none';
     document.getElementById('message-input').disabled = false;
+    document.getElementById('image-btn').disabled = false;
     
     loadMessages();
 }
@@ -148,10 +149,15 @@ function openGroup(groupId, groupName) {
     document.getElementById('add-member-section').style.display = 'flex';
     document.getElementById('members-sidebar').style.display = 'flex';
     document.getElementById('message-input').disabled = false;
+    document.getElementById('image-btn').disabled = false;
     
     loadMessages();
     loadMembers();
 }
+
+document.getElementById('image-btn').onclick = () => {
+    document.getElementById('image-upload').click();
+};
 
 document.getElementById('add-member-btn').onclick = async () => {
     const email = document.getElementById('member-email-input').value.toLowerCase().trim();
@@ -208,6 +214,42 @@ document.getElementById('message-input').onkeypress = async (e) => {
     e.target.value = "";
 };
 
+document.getElementById('image-upload').onchange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file!');
+        return;
+    }
+    
+    // Limit to 1MB to avoid Firestore limits
+    if (file.size > 1024 * 1024) {
+        alert('Image must be under 1MB!');
+        return;
+    }
+    
+    try {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+            const path = isGroupChat 
+                ? `groups/${currentChatId}/messages`
+                : `chats/${currentChatId}/messages`;
+            
+            await addDoc(collection(db, path), {
+                imageData: event.target.result,
+                sender: auth.currentUser.email,
+                timestamp: serverTimestamp()
+            });
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        alert('Failed to upload image.');
+    }
+};
+
 function loadMessages() {
     if (messagesListener) messagesListener();
     
@@ -232,12 +274,31 @@ function loadMessages() {
             sender.className = 'message-sender';
             sender.textContent = msg.sender.split('@')[0];
             
-            const text = document.createElement('div');
-            text.className = 'message-text';
-            text.textContent = msg.text;
-            
             msgDiv.appendChild(sender);
-            msgDiv.appendChild(text);
+            
+            if (msg.text) {
+                const text = document.createElement('div');
+                text.className = 'message-text';
+                text.textContent = msg.text;
+                msgDiv.appendChild(text);
+            }
+            
+            if (msg.imageUrl) {
+                const img = document.createElement('img');
+                img.className = 'message-image';
+                img.src = msg.imageUrl;
+                img.onclick = () => window.open(msg.imageUrl, '_blank');
+                msgDiv.appendChild(img);
+            }
+            
+            if (msg.imageData) {
+                const img = document.createElement('img');
+                img.className = 'message-image';
+                img.src = msg.imageData;
+                img.onclick = () => window.open(msg.imageData, '_blank');
+                msgDiv.appendChild(img);
+            }
+            
             area.appendChild(msgDiv);
         });
         
