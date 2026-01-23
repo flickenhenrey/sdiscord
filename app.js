@@ -1,10 +1,6 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyDPggbx3_-BR-Lf8aBkihufcXFF9stijAc",import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { 
-    getFirestore, collection, addDoc, query, orderBy, onSnapshot, 
-    serverTimestamp, doc, setDoc, getDoc, where, updateDoc, arrayUnion 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, where, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPggbx3_-BR-Lf8aBkihufcXFF9stijAc",
@@ -26,7 +22,6 @@ let isGroupChat = false;
 let messagesListener = null;
 let membersListener = null;
 
-// Authentication
 onAuthStateChanged(auth, user => {
     if (user) {
         showApp(user);
@@ -62,7 +57,6 @@ document.getElementById('logout-btn').onclick = () => {
     signOut(auth);
 };
 
-// Friends
 document.getElementById('add-friend-btn').onclick = async () => {
     const email = document.getElementById('friend-search').value.toLowerCase().trim();
     if (!email || email === auth.currentUser.email) return;
@@ -106,7 +100,6 @@ function openDirectMessage(email) {
     loadMessages();
 }
 
-// Groups
 document.getElementById('create-group-btn').onclick = async () => {
     const name = document.getElementById('group-name-input').value.trim();
     if (!name) return;
@@ -194,7 +187,6 @@ function loadMembers() {
     });
 }
 
-// Messages
 document.getElementById('message-input').onkeypress = async (e) => {
     if (e.key !== 'Enter') return;
     
@@ -223,7 +215,6 @@ document.getElementById('image-upload').onchange = async (e) => {
         return;
     }
     
-    // Limit to 1MB to avoid Firestore limits
     if (file.size > 1024 * 1024) {
         alert('Image must be under 1MB!');
         return;
@@ -281,14 +272,6 @@ function loadMessages() {
                 text.className = 'message-text';
                 text.textContent = msg.text;
                 msgDiv.appendChild(text);
-            }
-            
-            if (msg.imageUrl) {
-                const img = document.createElement('img');
-                img.className = 'message-image';
-                img.src = msg.imageUrl;
-                img.onclick = () => window.open(msg.imageUrl, '_blank');
-                msgDiv.appendChild(img);
             }
             
             if (msg.imageData) {
