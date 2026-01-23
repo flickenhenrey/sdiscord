@@ -1,10 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDPggbx3_-BR-Lf8aBkihufcXFF9stijAc",import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { 
     getFirestore, collection, addDoc, query, orderBy, onSnapshot, 
     serverTimestamp, doc, setDoc, getDoc, where, updateDoc, arrayUnion 
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-import { getDatabase, ref, onValue, set, onDisconnect } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDPggbx3_-BR-Lf8aBkihufcXFF9stijAc",
@@ -13,14 +13,12 @@ const firebaseConfig = {
   storageBucket: "schooldiscord67.firebasestorage.app",
   messagingSenderId: "870727141580",
   appId: "1:870727141580:web:26b441254827d647409a69",
-  measurementId: "G-2D3E72HNF3",
-  databaseURL: "https://schooldiscord67-default-rtdb.firebaseio.com"
+  measurementId: "G-2D3E72HNF3"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
-const rtdb = getDatabase();
 const provider = new GoogleAuthProvider();
 
 let currentChatId = null;
@@ -32,7 +30,6 @@ let membersListener = null;
 onAuthStateChanged(auth, user => {
     if (user) {
         showApp(user);
-        setupPresence(user.email);
     } else {
         showAuth();
     }
@@ -55,12 +52,6 @@ function showApp(user) {
 function showAuth() {
     document.getElementById('auth-container').style.display = 'flex';
     document.getElementById('app-container').style.display = 'none';
-}
-
-function setupPresence(email) {
-    const statusRef = ref(rtdb, `status/${email.replace(/\./g, '_')}`);
-    set(statusRef, { online: true, lastSeen: Date.now() });
-    onDisconnect(statusRef).set({ online: false, lastSeen: Date.now() });
 }
 
 document.getElementById('login-btn').onclick = () => {
@@ -191,23 +182,8 @@ function loadMembers() {
         members.forEach(email => {
             const item = document.createElement('div');
             item.className = "member-item";
-            
-            const dot = document.createElement('span');
-            dot.className = 'status-dot offline';
-            
-            const text = document.createElement('span');
-            text.textContent = email;
-            
-            item.appendChild(dot);
-            item.appendChild(text);
+            item.textContent = email;
             membersList.appendChild(item);
-            
-            // Check online status
-            const statusRef = ref(rtdb, `status/${email.replace(/\./g, '_')}`);
-            onValue(statusRef, statusSnap => {
-                const status = statusSnap.val();
-                dot.className = status?.online ? 'status-dot online' : 'status-dot offline';
-            });
         });
     });
 }
