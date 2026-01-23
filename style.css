@@ -274,10 +274,34 @@ body {
 .message-input-area {
     padding: 16px;
     background: #313338;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#image-btn {
+    background: #383a40;
+    border: none;
+    color: #dcddde;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+#image-btn:hover:not(:disabled) {
+    background: #4e5058;
+}
+
+#image-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 #message-input {
-    width: 100%;
+    flex: 1;
     background: #383a40;
     border: none;
     color: #dcddde;
@@ -290,6 +314,19 @@ body {
 #message-input:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.message-image {
+    max-width: 300px;
+    max-height: 300px;
+    border-radius: 8px;
+    margin-top: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.message-image:hover {
+    opacity: 0.9;
 }
 
 /* Members Sidebar */
